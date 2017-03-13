@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: b0647cd1397455443a284f1dba595fb5
+timeCreated: 1489077418
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 50
+  forceTextureCase: 0
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Blackadder ITC
+  fontNames:
+  - Blackadder ITC
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
