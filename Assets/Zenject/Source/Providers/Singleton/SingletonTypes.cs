@@ -16,7 +16,7 @@ namespace Zenject
         FromGetter,
         FromResolve,
         FromResource,
-        FromScriptableObjectResource,
+        FromNewScriptableObjectResource,
         FromSubContainerPrefab,
         FromSubContainerPrefabResource,
     }

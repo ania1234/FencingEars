@@ -211,7 +211,7 @@ namespace Zenject
         {
             Assert.That(IsValidating);
 
-#if !NOT_UNITY3D && !ZEN_TESTS_OUTSIDE_UNITY
+#if !NOT_UNITY3D
             Assert.That(Application.isEditor);
 #endif
 
@@ -383,6 +383,12 @@ namespace Zenject
             if (matches.Any())
             {
                 var instances = matches.SelectMany(x => SafeGetInstances(x, context)).ToArray();
+
+                if (instances.Length == 0 && !context.Optional)
+                {
+                    throw Assert.CreateException(
+                        "Could not find required dependency with type '{0}'.  Found providers but they returned zero results!", context.MemberType);
+                }
 
                 if (IsValidating)
                 {
@@ -1675,7 +1681,7 @@ namespace Zenject
                 new BindInfo(typeof(TContract)));
         }
 
-        public ConcreteIdBinderGeneric<TContract> Bind<TContract>(BindInfo bindInfo)
+        internal ConcreteIdBinderGeneric<TContract> Bind<TContract>(BindInfo bindInfo)
         {
             Assert.That(!typeof(TContract).DerivesFrom<IPlaceholderFactory>(),
                 "You should not use Container.Bind for factory classes.  Use Container.BindFactory instead.");
@@ -1892,6 +1898,11 @@ namespace Zenject
 
             return new MemoryPoolInitialSizeBinder<TContract>(
                 bindInfo, factoryBindInfo, poolBindInfo);
+        }
+
+        public MemoryPoolInitialSizeBinder<TContract> BindMemoryPool<TContract>()
+        {
+            return BindMemoryPool<TContract, MemoryPool<TContract>>();
         }
 
         public MemoryPoolInitialSizeBinder<TContract> BindMemoryPool<TContract, TFactory>()

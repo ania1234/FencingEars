@@ -141,7 +141,7 @@ namespace Zenject
             return FromNewComponentOnNewGameObject(new GameObjectCreationParameters());
         }
 
-        public NameTransformScopeArgConditionCopyNonLazyBinder FromNewComponentOnNewGameObject(
+        internal NameTransformScopeArgConditionCopyNonLazyBinder FromNewComponentOnNewGameObject(
             GameObjectCreationParameters gameObjectInfo)
         {
             BindingUtil.AssertIsComponent(ConcreteTypes);
@@ -166,7 +166,7 @@ namespace Zenject
                 prefab, new GameObjectCreationParameters());
         }
 
-        public NameTransformScopeArgConditionCopyNonLazyBinder FromComponentInNewPrefab(
+        internal NameTransformScopeArgConditionCopyNonLazyBinder FromComponentInNewPrefab(
             UnityEngine.Object prefab, GameObjectCreationParameters gameObjectInfo)
         {
             BindingUtil.AssertIsValidPrefab(prefab);
@@ -184,7 +184,7 @@ namespace Zenject
             return FromComponentInNewPrefabResource(resourcePath, new GameObjectCreationParameters());
         }
 
-        public NameTransformScopeArgConditionCopyNonLazyBinder FromComponentInNewPrefabResource(
+        internal NameTransformScopeArgConditionCopyNonLazyBinder FromComponentInNewPrefabResource(
             string resourcePath, GameObjectCreationParameters gameObjectInfo)
         {
             BindingUtil.AssertIsValidResourcePath(resourcePath);
@@ -197,7 +197,7 @@ namespace Zenject
             return new NameTransformScopeArgConditionCopyNonLazyBinder(BindInfo, gameObjectInfo);
         }
 
-        public ScopeArgConditionCopyNonLazyBinder FromScriptableObjectResource(string resourcePath)
+        public ScopeArgConditionCopyNonLazyBinder FromNewScriptableObjectResource(string resourcePath)
         {
             BindingUtil.AssertIsValidResourcePath(resourcePath);
             BindingUtil.AssertIsInterfaceOrScriptableObject(AllParentTypes);
@@ -205,7 +205,7 @@ namespace Zenject
             BindInfo.RequireExplicitScope = true;
             SubFinalizer = new ScopableBindingFinalizer(
                 BindInfo,
-                SingletonTypes.FromScriptableObjectResource,
+                SingletonTypes.FromNewScriptableObjectResource,
                 resourcePath.ToLower(),
                 (container, type) => new ScriptableObjectResourceProvider(
                     resourcePath, type, container, BindInfo.ConcreteIdentifier, BindInfo.Arguments));

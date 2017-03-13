@@ -82,6 +82,22 @@ namespace Zenject
             }
 
             Log.Debug("GameObjectContext: Initialized successfully");
+
+            // Normally, the IInitializable.Initialize method would be called during MonoKernel.Start
+            // However, this behaviour is undesirable for dynamically created objects, since Unity
+            // has the strange behaviour of waiting until the end of the frame to call Start() on
+            // dynamically created objects, which means that any GameObjectContext that is created
+            // dynamically via a factory cannot be used immediately after calling Create(), since
+            // it will not have been initialized
+            // So we have chosen to diverge from Unity behaviour here and trigger IInitializable.Initialize
+            // immediately - but only when the GameObjectContext is created dynamically.  For any
+            // GameObjectContext's that are placed in the scene, we still want to execute
+            // IInitializable.Initialize during Start()
+            if (gameObject.scene.isLoaded && !_container.IsValidating)
+            {
+                _kernel = _container.Resolve<MonoKernel>();
+                _kernel.ForceInitialize();
+            }
         }
 
         protected override IEnumerable<MonoBehaviour> GetInjectableMonoBehaviours()

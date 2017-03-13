@@ -23,6 +23,14 @@ namespace Zenject.Internal
             return obj == null || obj.Equals(null);
         }
 
+        // This can be useful if you are running code outside unity
+        // since in that case you have to make sure to avoid calling anything
+        // inside Unity DLLs
+        public static bool IsOutsideUnity()
+        {
+            return AppDomain.CurrentDomain.FriendlyName != "Unity Child Domain";
+        }
+
         public static bool AreFunctionsEqual(Delegate left, Delegate right)
         {
             return left.Target == right.Target && left.Method() == right.Method();

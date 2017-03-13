@@ -7,12 +7,7 @@ namespace Zenject
         int NumActive { get; }
         int NumInactive { get; }
 
-        Type ContractType
-        {
-            get;
-        }
-
-        Type ConcreteType
+        Type ItemType
         {
             get;
         }

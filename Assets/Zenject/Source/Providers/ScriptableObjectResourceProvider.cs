@@ -37,8 +37,6 @@ namespace Zenject
         public IEnumerator<List<object>> GetAllInstancesWithInjectSplit(
             InjectContext context, List<TypeValuePair> args)
         {
-            Assert.IsEmpty(args);
-
             Assert.IsNotNull(context);
 
             var objects = Resources.LoadAll(_resourcePath, _resourceType)

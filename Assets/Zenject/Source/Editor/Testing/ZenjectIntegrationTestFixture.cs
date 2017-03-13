@@ -85,8 +85,8 @@ namespace Zenject
         bool CurrentTestHasAttribute<T>()
             where T : Attribute
         {
-            var fullMethodName = TestContext.CurrentContext.Test.FullName;
-            var name = fullMethodName.Substring(fullMethodName.LastIndexOf(".")+1);
+            // tests with double parameters need to have their () removed first
+            var name = TestContext.CurrentContext.Test.FullName;
 
             // Remove all characters after the first open bracket if there is one
             int openBracketIndex = name.IndexOf("(");
@@ -95,6 +95,9 @@ namespace Zenject
             {
                 name = name.Substring(0, openBracketIndex);
             }
+
+            // Now we can get the substring starting at the last '.'
+            name = name.Substring(name.LastIndexOf(".") + 1);
 
             return this.GetType().GetMethod(name).GetCustomAttributes(true)
                 .Cast<Attribute>().OfType<T>().Any();
