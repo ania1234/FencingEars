@@ -1,9 +1,14 @@
-﻿Shader "Unlit/NewTextShader"
+﻿Shader "Custom/Unlit/HandwritingTextShaderv1"
 {
 	Properties {
 		[PerRendererData] _MainTex ("Font Texture", 2D) = "white" {}
-		_NewTex("Actual Font Texture", 2D) = "white" {}
+
+		//Red - black mask font texture
+		_NewTex("Mask Font Texture", 2D) = "white" {}
+
 		_Color ("Tint", Color) = (1,1,1,1)
+		//Cutoff 0 - we show thew whole letter
+		//Cutoff 1 - we show nothing
 		_Cutoff("Alpha cutoff", Range(0.0, 1.0))=0.5
 		
 		_StencilComp ("Stencil Comparison", Float) = 8
@@ -13,8 +18,6 @@
 		_StencilReadMask ("Stencil Read Mask", Float) = 255
 		
 		_ColorMask ("Color Mask", Float) = 15
-
-		[MaterialToggle] _IsAnimating("Is animating", Float) = 0 
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 	}
@@ -91,25 +94,20 @@
 				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 				OUT.texcoord = IN.texcoord;
 				OUT.worldSpaceViewDir =  UnityObjectToViewPos(OUT.worldPosition);
-				OUT.color = IN.color;// * _Color;
+				OUT.color = IN.color * _Color;
 				return OUT;
 			}
 
 			sampler2D _MainTex;
 			sampler2D _NewTex;
 			float _Cutoff;
-			float _IsAnimating;
+
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * _Color;
+				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				if(_IsAnimating>0){
-					color.a*=(1-IN.color.r);
-					color.a*=(step(_Cutoff, tex2D(_NewTex, IN.texcoord).r)*IN.color.g+IN.color.b);
-				}
-				else{
-					color.a*=(step(_Cutoff, tex2D(_NewTex, IN.texcoord).r));
-				}
+				//Here we multiply alpha by the valu from 
+				color.a*=(step(_Cutoff, tex2D(_NewTex, IN.texcoord).r));
 				return color;
 			}
 		ENDCG
