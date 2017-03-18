@@ -11,9 +11,8 @@ public class GetTextureOnAwake : MonoBehaviour
 
 	public SpriteRenderer spriteRenderer;
 
-	void Start ()
+	void Awake ()
 	{
-		Debug.LogError (GetComponent<SpriteRenderer> ().sprite.pixelsPerUnit);
 		if (TextureManager.portraitTexture != null) {
 			//We have to calculate new pixels per unit, so that the new sprite will be the same size as the previous one.
 			float newPixelsPerUnit = spriteRenderer.sprite.pixelsPerUnit * TextureManager.portraitTexture.width / spriteRenderer.sprite.rect.width;
